@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #/usr/bin/python2
 '''
-By kyubyong park. kbpark.linguist@gmail.com. 
+By kyubyong park. kbpark.linguist@gmail.com.
 https://www.github.com/kyubyong/deepvoice3
 '''
 from __future__ import print_function
@@ -22,7 +22,7 @@ def spectrogram2wav(mag):
     # transpose
     mag = mag.T
 
-    # de-noramlize
+    # de-normalize
     mag = (np.clip(mag, 0, 1) * hp.max_db) - hp.max_db + hp.ref_db
 
     # to amplitude

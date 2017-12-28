@@ -2,7 +2,7 @@
 # #/usr/bin/python2
 
 '''
-By kyubyong park. kbpark.linguist@gmail.com. 
+By kyubyong park. kbpark.linguist@gmail.com.
 https://www.github.com/kyubyong/deepvoice3
 '''
 
@@ -63,20 +63,45 @@ def get_spectrograms(sound_file):
 
     return mel, done, mag
 
+def plot_spectrogram(wav_filename):
+    from matplotlib import pyplot as plt
+
+    _, _, mag = get_spectrograms(wav_filename)
+
+    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(10, 10))
+    im = axes.imshow(mag.T)
+    axes.axis('off')
+    fig.subplots_adjust(right=0.8, hspace=0.4)
+    cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+    fig.colorbar(im, cax=cbar_ax)
+    plt.savefig('mag.png', format='png')
+
+def test_reconstruct(wav_filename):
+    '''
+    Create a spectrogram and reconstruct the wav
+    '''
+    from utils import spectrogram2wav
+    from snips_speech_utils.audio import Audio
+
+    _, _, mag = get_spectrograms(wav_filename)
+    audio = spectrogram2wav(mag)
+    audio = Audio(data=audio, sample_rate=16000)
+    audio.write('out.wav')
+    audio.play()
+
+
+def compute_features():
+    # get list of filenames for tqdm
+    filenames = [t[0] for t in hp.data.generator()]
+
+    hp.data.create_paths()
+
+    for fname in tqdm.tqdm(filenames):
+        mel, dones, mag = get_spectrograms(fname)  # (n_mels, T), (1+n_fft/2, T) float32
+        np.save(hp.data.mel_path(fname), mel)
+        np.save(hp.data.done_path(fname), dones)
+        np.save(hp.data.mag_path(fname), mag)
+
+
 if __name__ == "__main__":
-    wav_folder = os.path.join(hp.data, 'wavs')
-    # wav_folder = os.path.join('/data/private/voice/nick', 'Tom')
-    mel_folder = os.path.join(hp.data, 'mels')
-    dones_folder = os.path.join(hp.data, 'dones')
-    mag_folder = os.path.join(hp.data, 'mags')
-
-    for folder in (mel_folder, dones_folder, mag_folder):
-        if not os.path.exists(folder): os.mkdir(folder)
-
-    files = glob.glob(os.path.join(wav_folder, "*"))
-    for f in tqdm.tqdm(files):
-        fname = os.path.basename(f)
-        mel, dones, mag = get_spectrograms(f)  # (n_mels, T), (1+n_fft/2, T) float32
-        np.save(os.path.join(mel_folder, fname.replace(".wav", ".npy")), mel)
-        np.save(os.path.join(dones_folder, fname.replace(".wav", ".npy")), dones)
-        np.save(os.path.join(mag_folder, fname.replace(".wav", ".npy")), mag)
+    compute_features()
