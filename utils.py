@@ -79,6 +79,36 @@ def plot_alignment(alignments, gs):
     plt.suptitle('{} Steps'.format(gs))
     plt.savefig('{}/alignment_{}.png'.format(hp.logdir, gs), format='png')
 
+
+
+def plot_spectrogram(wav_filename):
+    from prepro import get_spectrograms
+    _, _, mag = get_spectrograms(wav_filename)
+
+    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(10, 10))
+    im = axes.imshow(mag.T)
+    axes.axis('off')
+    fig.subplots_adjust(right=0.8, hspace=0.4)
+    cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+    fig.colorbar(im, cax=cbar_ax)
+    plt.savefig('mag.png', format='png')
+
+
+def test_reconstruct(wav_filename):
+    '''
+    Create a spectrogram and reconstruct the wav
+    '''
+    from prepro import get_spectrograms
+    from snips_speech_utils.audio import Audio
+
+    _, _, mag = get_spectrograms(wav_filename)
+    audio = spectrogram2wav(mag)
+    audio = Audio(data=audio, sample_rate=16000)
+    audio.write('out.wav')
+    audio.play()
+
+
+
 # def cross_entropy_loss(predictions, labels, num_classes):
 #     def _softmax(X):
 #         exps = np.exp(X) - np.max(X)

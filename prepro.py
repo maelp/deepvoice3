@@ -63,32 +63,6 @@ def get_spectrograms(sound_file):
 
     return mel, done, mag
 
-def plot_spectrogram(wav_filename):
-    from matplotlib import pyplot as plt
-
-    _, _, mag = get_spectrograms(wav_filename)
-
-    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(10, 10))
-    im = axes.imshow(mag.T)
-    axes.axis('off')
-    fig.subplots_adjust(right=0.8, hspace=0.4)
-    cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
-    fig.colorbar(im, cax=cbar_ax)
-    plt.savefig('mag.png', format='png')
-
-def test_reconstruct(wav_filename):
-    '''
-    Create a spectrogram and reconstruct the wav
-    '''
-    from utils import spectrogram2wav
-    from snips_speech_utils.audio import Audio
-
-    _, _, mag = get_spectrograms(wav_filename)
-    audio = spectrogram2wav(mag)
-    audio = Audio(data=audio, sample_rate=16000)
-    audio.write('out.wav')
-    audio.play()
-
 
 def compute_features():
     # get list of filenames for tqdm
