@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #/usr/bin/python2
 '''
-By kyubyong park. kbpark.linguist@gmail.com. 
+By kyubyong park. kbpark.linguist@gmail.com.
 https://www.github.com/kyubyong/deepvoice3
 '''
 
@@ -89,7 +89,7 @@ class Graph:
                     grad = tf.clip_by_norm(grad, hp.max_grad_norm)
                     self.clipped.append((grad, var))
                 self.train_op = self.optimizer.apply_gradients(self.clipped, global_step=self.global_step)
-                   
+
                 # Summary
                 tf.summary.scalar('Train_Loss/LOSS', self.loss)
                 tf.summary.scalar('Train_Loss/mels', self.loss_mels)
@@ -108,7 +108,7 @@ if __name__ == '__main__':
             alignments_li = sess.run(g.alignments_li)
             plot_alignment(alignments_li, 0)  # (Tx, Ty/r)
 
-            while 1:
+            while True:
                 if sv.should_stop(): break
                 print(g.num_batch)
                 for step in tqdm(range(g.num_batch), total=g.num_batch, ncols=70, leave=False, unit='b'):

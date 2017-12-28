@@ -18,8 +18,10 @@ import unicodedata
 import unidecode
 from num2words import num2words
 
+
 def _strip_accents(s):
-    return unidecode.unidecode(sent)
+    return unidecode.unidecode(s)
+
 
 def text_normalize(sent):
     '''Minimum text preprocessing'''
@@ -37,6 +39,7 @@ def text_normalize(sent):
     normalized = normalized.strip()
 
     return normalized
+
 
 def load_vocab():
     vocab = "PE abcdefghijklmnopqrstuvwxyz'.?"  # P: Padding E: End of Sentence
