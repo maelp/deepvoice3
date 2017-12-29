@@ -96,10 +96,10 @@ class LJDataset(Dataset):
 class Hyperparams:
     '''Hyper parameters'''
     # signal processing
-    sr = 16000 #22050 # Sampling rate.
-    n_fft = 1024 #2048 # fft points (samples)
-    frame_shift = 0.01 #0.0125 # seconds
-    frame_length = 0.025 #0.05 # seconds
+    sr = 22050 #22050 # Sampling rate.
+    n_fft = 2048 #2048 # fft points (samples)
+    frame_shift = 0.0125 #0.0125 # seconds
+    frame_length = 0.05 #0.05 # seconds
     hop_length = int(sr*frame_shift) # samples  This is dependent on the frame_shift.
     win_length = int(sr*frame_length) # samples This is dependent on the frame_length.
     n_mels = 80 # Number of Mel banks to generate
@@ -107,7 +107,7 @@ class Hyperparams:
     n_iter = 200 #50 # Number of inversion iterations, higher is slower but better reconstruction
     preemphasis = 0.97 # or None
     max_db = 100
-    ref_db = 50
+    ref_db = 20
 
     # Model
     r = 4 # Reduction factor
