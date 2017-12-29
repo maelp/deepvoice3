@@ -71,20 +71,26 @@ class ArcticDataset(Dataset):
 
 
 class LJDataset(Dataset):
-    def __init__(self, path):
+    def __init__(self, path, n_max_items=0):
         features_path = os.path.basename(path).strip()
         assert(len(features_path) > 0)
         super(LJDataset, self).__init__(features_path)
         self.path = path
+        self.n_max_items = n_max_items # max number of items to consider, or 0 for all, there are 13100 items which represent about 24h
 
     def generator(self):
         # assumes a `metadata.csv` file
         metadata_path = os.path.join(self.path, 'metadata.csv')
         if not(os.path.exists(metadata_path)):
             raise Exception('Invalid path for LJ speech dataset "{}", could not find "metadata.csv"'.format(path))
+        n_items = 0
         for line in io.open(metadata_path, 'r', encoding='utf-8'):
             fname, _, sent = line.strip().split("|")
-            yield (os.path.join(self.path, 'wavs', fname), sent)
+            yield (os.path.join(self.path, 'wavs', '{}.wav'.format(fname)), sent)
+            n_items += 1
+            if self.n_max_items > 0:
+                if self.n_max_items <= n_items:
+                    break
 
 
 class Hyperparams:
@@ -125,7 +131,8 @@ class Hyperparams:
     attention_win_size = 3
 
     # data
-    data = ArcticDataset('data/arctic_slt')
+    #data = ArcticDataset('data/arctic_slt')
+    data = LJDataset('data/LJSpeech-1.0', n_max_items=6000)
     max_duration = 10.0 # seconds
     Tx = 180 # characters. maximum length of text.
     Ty = int(get_Ty(max_duration, sr, hop_length, r)) # Maximum length of sound (frames)

@@ -60,15 +60,16 @@ def synthesize():
                 mag_output = sess.run(g.mag_output, {g.decoder_output: decoder_output})
 
                 # Generate wav files
-                if not os.path.exists(hp.sampledir): os.makedirs(hp.sampledir)
+                if not os.path.exists(hp.sampledir):
+                    os.makedirs(hp.sampledir)
+
                 for mag in mag_output:
                     print("Working on file num ", file_id)
                     wav = spectrogram2wav(mag)
                     write(hp.sampledir + "/{}_{}.wav".format(mname, file_id), hp.sr, wav)
                     file_id += 1
 
+
 if __name__ == '__main__':
     synthesize()
     print("Done")
-
-

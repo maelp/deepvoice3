@@ -110,12 +110,13 @@ if __name__ == '__main__':
 
             while True:
                 if sv.should_stop(): break
-                print(g.num_batch)
+                print(' - gs={}'.format(gs))
                 for step in tqdm(range(g.num_batch), total=g.num_batch, ncols=70, leave=False, unit='b'):
                     gs, _ = sess.run([g.global_step, g.train_op])
 
                     # Write checkpoint files at every epoch
                     if gs % 1000 == 0:
+                        print(' - saving model')
                         sv.saver.save(sess, hp.logdir + '/model_gs_{}'.format(str(gs // 1000).zfill(3) + "k"))
 
                         # plot alignments
